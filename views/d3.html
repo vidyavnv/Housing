@@ -2,15 +2,7 @@
 <meta charset="utf-8">
 <style>
 
-.bar {
-  fill: steelblue;
-}
-
-.bar:hover {
-  fill: brown;
-}
-
-.axis {
+body {
   font: 10px sans-serif;
 }
 
@@ -21,25 +13,52 @@
   shape-rendering: crispEdges;
 }
 
-.x.axis path {
-  display: none;
+.dot {
+  stroke: #000;
+}
+
+
+.container1 {
+  float: left;
+}
+.container2 {
+  float: center;
+}
+.container3 {
+  float: right;
 }
 
 </style>
+
+<div class=container1 id="area1"></div>
+<div class=container2 id="area2"></div>
+<div class=container3 id="area3"></div>
+<div class=container1 id="area4"></div>
+<div class=container2 id="area5"></div>
+<div class=container3 id="area6"></div>
+<div class=container1 id="area7"></div>
+<div class=container2 id="area8"></div>
+<div class=container3 id="area9"></div>
+<div class=container1 id="area10"></div>
+<div class=container2 id="area11"></div>
+<div class=container3 id="area12"></div>
+<div class=container1 id="area13"></div>
+
 <body>
-  hello
 <script src="http://d3js.org/d3.v3.min.js"></script>
 <script>
 
 var margin = {top: 20, right: 20, bottom: 30, left: 40},
-    width = 960 - margin.left - margin.right,
-    height = 500 - margin.top - margin.bottom;
+    width = 400 - margin.left - margin.right,
+    height = 200 - margin.top - margin.bottom;
 
-var x = d3.scale.ordinal()
-    .rangeRoundBands([0, width], .1);
+var x = d3.scale.linear()
+    .range([0, width]);
 
 var y = d3.scale.linear()
     .range([height, 0]);
+
+var color = d3.scale.category10();
 
 var xAxis = d3.svg.axis()
     .scale(x)
@@ -47,50 +66,985 @@ var xAxis = d3.svg.axis()
 
 var yAxis = d3.svg.axis()
     .scale(y)
-    .orient("left")
-    .ticks(10, "%");
+    .orient("left");
 
-var svg = d3.select("body").append("svg")
+var svg1 = d3.select("#area1").append("svg")
     .attr("width", width + margin.left + margin.right)
     .attr("height", height + margin.top + margin.bottom)
   .append("g")
     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-d3.tsv("data.tsv", type, function(error, data) {
-  x.domain(data.map(function(d) { return d.letter; }));
-  y.domain([0, d3.max(data, function(d) { return d.frequency; })]);
+d3.csv("house2.csv", function(error, data) {
+  data.forEach(function(d) {
+    d.MEDV = +d.MEDV;
+    d.RM = +d.RM;
+  });
 
-  svg.append("g")
+  x.domain(d3.extent(data, function(d) { return d.RM; })).nice();
+  y.domain(d3.extent(data, function(d) { return d.MEDV; })).nice();
+
+  svg1.append("g")
       .attr("class", "x axis")
       .attr("transform", "translate(0," + height + ")")
-      .call(xAxis);
+      .call(xAxis)
+    .append("text")
+      .attr("class", "label")
+      .attr("x", width)
+      .attr("y", -6)
+      .style("text-anchor", "end")
+      .text("RM");
 
-  svg.append("g")
+  svg1.append("g")
       .attr("class", "y axis")
       .call(yAxis)
     .append("text")
+      .attr("class", "label")
       .attr("transform", "rotate(-90)")
       .attr("y", 6)
       .attr("dy", ".71em")
       .style("text-anchor", "end")
-      .text("Frequency");
+      .text("MEDV")
 
-  svg.selectAll(".bar")
+  svg1.selectAll(".dot")
       .data(data)
-    .enter().append("rect")
-      .attr("class", "bar")
-      .attr("x", function(d) { return x(d.letter); })
-      .attr("width", x.rangeBand())
-      .attr("y", function(d) { return y(d.frequency); })
-      .attr("height", function(d) { return height - y(d.frequency); });
+    .enter().append("circle")
+      .attr("class", "dot")
+      .attr("r", 1.5)
+      .attr("cx", function(d) { return x(d.RM); })
+      .attr("cy", function(d) { return y(d.MEDV); })
+
+  svg1.append("text")
+        .attr("x", (width / 6))             
+        .attr("y", 0 - (margin.top / 4))
+        .attr("text-anchor", "right")  
+        .style("font-size", "10px") 
+        .style("text-decoration", "underline")  
+        .text("Average number of rooms vs Price ($1000)");
 
 });
 
-function type(d) {
-  d.frequency = +d.frequency;
-  return d;
-}
+
+
+
+var margin = {top: 20, right: 20, bottom: 30, left: 40},
+    width = 400 - margin.left - margin.right,
+    height = 200 - margin.top - margin.bottom;
+
+var x = d3.scale.linear()
+    .range([0, width]);
+
+var y = d3.scale.linear()
+    .range([height, 0]);
+
+var color = d3.scale.category10();
+
+var xAxis = d3.svg.axis()
+    .scale(x)
+    .orient("bottom");
+
+var yAxis = d3.svg.axis()
+    .scale(y)
+    .orient("left");
+
+var svg2 = d3.select("#area2").append("svg")
+    .attr("width", width + margin.left + margin.right)
+    .attr("height", height + margin.top + margin.bottom)
+  .append("g")
+    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+d3.csv("house2.csv", function(error, data) {
+  data.forEach(function(d) {
+    d.MEDV = +d.MEDV;
+    d.B = +d.B;
+  });
+
+  x.domain(d3.extent(data, function(d) { return d.B; })).nice();
+  y.domain(d3.extent(data, function(d) { return d.MEDV; })).nice();
+
+  svg2.append("g")
+      .attr("class", "x axis")
+      .attr("transform", "translate(0," + height + ")")
+      .call(xAxis)
+    .append("text")
+      .attr("class", "label")
+      .attr("x", width)
+      .attr("y", -6)
+      .style("text-anchor", "end")
+      .text("B");
+
+  svg2.append("g")
+      .attr("class", "y axis")
+      .call(yAxis)
+    .append("text")
+      .attr("class", "label")
+      .attr("transform", "rotate(-90)")
+      .attr("y", 6)
+      .attr("dy", ".71em")
+      .style("text-anchor", "end")
+      .text("MEDV")
+
+  svg2.selectAll(".dot")
+      .data(data)
+    .enter().append("circle")
+      .attr("class", "dot")
+      .attr("r", 1.5)
+      .attr("cx", function(d) { return x(d.B); })
+      .attr("cy", function(d) { return y(d.MEDV); })
+
+  svg2.append("text")
+        .attr("x", (width / 3))             
+        .attr("y", 0 - (margin.top / 4))
+        .attr("text-anchor", "right")  
+        .style("font-size", "10px") 
+        .style("text-decoration", "underline")  
+        .text("Proportion of Blacks vs Price ($1000)");
+
+});
+
+
+
+
+var margin = {top: 20, right: 20, bottom: 30, left: 40},
+    width = 400 - margin.left - margin.right,
+    height = 200 - margin.top - margin.bottom;
+
+var x = d3.scale.linear()
+    .range([0, width]);
+
+var y = d3.scale.linear()
+    .range([height, 0]);
+
+var color = d3.scale.category10();
+
+var xAxis = d3.svg.axis()
+    .scale(x)
+    .orient("bottom");
+
+var yAxis = d3.svg.axis()
+    .scale(y)
+    .orient("left");
+
+var svg3 = d3.select("#area2").append("svg")
+    .attr("width", width + margin.left + margin.right)
+    .attr("height", height + margin.top + margin.bottom)
+  .append("g")
+    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+d3.csv("house2.csv", function(error, data) {
+  data.forEach(function(d) {
+    d.MEDV = +d.MEDV;
+    d.CRIM = +d.CRIM;
+  });
+
+  x.domain(d3.extent(data, function(d) { return d.CRIM; })).nice();
+  y.domain(d3.extent(data, function(d) { return d.MEDV; })).nice();
+
+  svg3.append("g")
+      .attr("class", "x axis")
+      .attr("transform", "translate(0," + height + ")")
+      .call(xAxis)
+    .append("text")
+      .attr("class", "label")
+      .attr("x", width)
+      .attr("y", -6)
+      .style("text-anchor", "end")
+      .text("CRIM");
+
+  svg3.append("g")
+      .attr("class", "y axis")
+      .call(yAxis)
+    .append("text")
+      .attr("class", "label")
+      .attr("transform", "rotate(-90)")
+      .attr("y", 6)
+      .attr("dy", ".71em")
+      .style("text-anchor", "end")
+      .text("MEDV")
+
+  svg3.selectAll(".dot")
+      .data(data)
+    .enter().append("circle")
+      .attr("class", "dot")
+      .attr("r", 1.5)
+      .attr("cx", function(d) { return x(d.CRIM); })
+      .attr("cy", function(d) { return y(d.MEDV); })
+
+  svg3.append("text")
+        .attr("x", (width / 3))             
+        .attr("y", 0 - (margin.top / 4))
+        .attr("text-anchor", "right")  
+        .style("font-size", "10px") 
+        .style("text-decoration", "underline")  
+        .text("CRIME RATE vs Price ($1000)");
+
+});
+
+
+
+
+var margin = {top: 20, right: 20, bottom: 30, left: 40},
+    width = 400 - margin.left - margin.right,
+    height = 200 - margin.top - margin.bottom;
+
+var x = d3.scale.linear()
+    .range([0, width]);
+
+var y = d3.scale.linear()
+    .range([height, 0]);
+
+var color = d3.scale.category10();
+
+var xAxis = d3.svg.axis()
+    .scale(x)
+    .orient("bottom");
+
+var yAxis = d3.svg.axis()
+    .scale(y)
+    .orient("left");
+
+var svg4 = d3.select("#area4").append("svg")
+    .attr("width", width + margin.left + margin.right)
+    .attr("height", height + margin.top + margin.bottom)
+  .append("g")
+    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+d3.csv("house2.csv", function(error, data) {
+  data.forEach(function(d) {
+    d.MEDV = +d.MEDV;
+    d.ZN = +d.ZN;
+  });
+
+  x.domain(d3.extent(data, function(d) { return d.ZN; })).nice();
+  y.domain(d3.extent(data, function(d) { return d.MEDV; })).nice();
+
+  svg4.append("g")
+      .attr("class", "x axis")
+      .attr("transform", "translate(0," + height + ")")
+      .call(xAxis)
+    .append("text")
+      .attr("class", "label")
+      .attr("x", width)
+      .attr("y", -6)
+      .style("text-anchor", "end")
+      .text("ZN");
+
+  svg4.append("g")
+      .attr("class", "y axis")
+      .call(yAxis)
+    .append("text")
+      .attr("class", "label")
+      .attr("transform", "rotate(-90)")
+      .attr("y", 6)
+      .attr("dy", ".71em")
+      .style("text-anchor", "end")
+      .text("MEDV")
+
+  svg4.selectAll(".dot")
+      .data(data)
+    .enter().append("circle")
+      .attr("class", "dot")
+      .attr("r", 1.5)
+      .attr("cx", function(d) { return x(d.ZN); })
+      .attr("cy", function(d) { return y(d.MEDV); })
+
+  svg4.append("text")
+        .attr("x", (width / 3))             
+        .attr("y", 0 - (margin.top / 4))
+        .attr("text-anchor", "right")  
+        .style("font-size", "10px") 
+        .style("text-decoration", "underline")  
+        .text("Average LOT vs Price ($1000)");
+
+});
+
+
+var margin = {top: 20, right: 20, bottom: 30, left: 40},
+    width = 400 - margin.left - margin.right,
+    height = 200 - margin.top - margin.bottom;
+
+var x = d3.scale.linear()
+    .range([0, width]);
+
+var y = d3.scale.linear()
+    .range([height, 0]);
+
+var color = d3.scale.category10();
+
+var xAxis = d3.svg.axis()
+    .scale(x)
+    .orient("bottom");
+
+var yAxis = d3.svg.axis()
+    .scale(y)
+    .orient("left");
+
+var svg5 = d3.select("#area5").append("svg")
+    .attr("width", width + margin.left + margin.right)
+    .attr("height", height + margin.top + margin.bottom)
+  .append("g")
+    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+d3.csv("house2.csv", function(error, data) {
+  data.forEach(function(d) {
+    d.MEDV = +d.MEDV;
+    d.INDUS = +d.INDUS;
+  });
+
+  x.domain(d3.extent(data, function(d) { return d.INDUS; })).nice();
+  y.domain(d3.extent(data, function(d) { return d.MEDV; })).nice();
+
+  svg5.append("g")
+      .attr("class", "x axis")
+      .attr("transform", "translate(0," + height + ")")
+      .call(xAxis)
+    .append("text")
+      .attr("class", "label")
+      .attr("x", width)
+      .attr("y", -6)
+      .style("text-anchor", "end")
+      .text("INDUS");
+
+  svg5.append("g")
+      .attr("class", "y axis")
+      .call(yAxis)
+    .append("text")
+      .attr("class", "label")
+      .attr("transform", "rotate(-90)")
+      .attr("y", 6)
+      .attr("dy", ".71em")
+      .style("text-anchor", "end")
+      .text("MEDV")
+
+  svg5.selectAll(".dot")
+      .data(data)
+    .enter().append("circle")
+      .attr("class", "dot")
+      .attr("r", 1.5)
+      .attr("cx", function(d) { return x(d.INDUS); })
+      .attr("cy", function(d) { return y(d.MEDV); })
+
+  svg5.append("text")
+        .attr("x", (width / 3))             
+        .attr("y", 0 - (margin.top / 4))
+        .attr("text-anchor", "right")  
+        .style("font-size", "10px") 
+        .style("text-decoration", "underline")  
+        .text("Non-retail business acres vs Price ($1000)");
+
+});
+
+
+
+var margin = {top: 20, right: 20, bottom: 30, left: 40},
+    width = 400 - margin.left - margin.right,
+    height = 200 - margin.top - margin.bottom;
+
+var x = d3.scale.linear()
+    .range([0, width]);
+
+var y = d3.scale.linear()
+    .range([height, 0]);
+
+var color = d3.scale.category10();
+
+var xAxis = d3.svg.axis()
+    .scale(x)
+    .orient("bottom");
+
+var yAxis = d3.svg.axis()
+    .scale(y)
+    .orient("left");
+
+var svg6 = d3.select("#area5").append("svg")
+    .attr("width", width + margin.left + margin.right)
+    .attr("height", height + margin.top + margin.bottom)
+  .append("g")
+    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+d3.csv("house2.csv", function(error, data) {
+  data.forEach(function(d) {
+    d.MEDV = +d.MEDV;
+    d.CHAS = +d.CHAS;
+  });
+
+  x.domain(d3.extent(data, function(d) { return d.CHAS; })).nice();
+  y.domain(d3.extent(data, function(d) { return d.MEDV; })).nice();
+
+  svg6.append("g")
+      .attr("class", "x axis")
+      .attr("transform", "translate(0," + height + ")")
+      .call(xAxis)
+    .append("text")
+      .attr("class", "label")
+      .attr("x", width)
+      .attr("y", -6)
+      .style("text-anchor", "end")
+      .text("CHAS");
+
+  svg6.append("g")
+      .attr("class", "y axis")
+      .call(yAxis)
+    .append("text")
+      .attr("class", "label")
+      .attr("transform", "rotate(-90)")
+      .attr("y", 6)
+      .attr("dy", ".71em")
+      .style("text-anchor", "end")
+      .text("MEDV")
+
+  svg6.selectAll(".dot")
+      .data(data)
+    .enter().append("circle")
+      .attr("class", "dot")
+      .attr("r", 1.5)
+      .attr("cx", function(d) { return x(d.CHAS); })
+      .attr("cy", function(d) { return y(d.MEDV); })
+
+  svg6.append("text")
+        .attr("x", (width / 3))             
+        .attr("y", 0 - (margin.top / 4))
+        .attr("text-anchor", "right")  
+        .style("font-size", "10px") 
+        .style("text-decoration", "underline")  
+        .text("Charles River dummy variable vs Price ($1000)");
+
+});
+
+
+
+var margin = {top: 20, right: 20, bottom: 30, left: 40},
+    width = 400 - margin.left - margin.right,
+    height = 200 - margin.top - margin.bottom;
+
+var x = d3.scale.linear()
+    .range([0, width]);
+
+var y = d3.scale.linear()
+    .range([height, 0]);
+
+var color = d3.scale.category10();
+
+var xAxis = d3.svg.axis()
+    .scale(x)
+    .orient("bottom");
+
+var yAxis = d3.svg.axis()
+    .scale(y)
+    .orient("left");
+
+var svg7 = d3.select("#area7").append("svg")
+    .attr("width", width + margin.left + margin.right)
+    .attr("height", height + margin.top + margin.bottom)
+  .append("g")
+    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+d3.csv("house2.csv", function(error, data) {
+  data.forEach(function(d) {
+    d.MEDV = +d.MEDV;
+    d.NOX = +d.NOX;
+  });
+
+  x.domain(d3.extent(data, function(d) { return d.NOX; })).nice();
+  y.domain(d3.extent(data, function(d) { return d.MEDV; })).nice();
+
+  svg7.append("g")
+      .attr("class", "x axis")
+      .attr("transform", "translate(0," + height + ")")
+      .call(xAxis)
+    .append("text")
+      .attr("class", "label")
+      .attr("x", width)
+      .attr("y", -6)
+      .style("text-anchor", "end")
+      .text("NOX");
+
+  svg7.append("g")
+      .attr("class", "y axis")
+      .call(yAxis)
+    .append("text")
+      .attr("class", "label")
+      .attr("transform", "rotate(-90)")
+      .attr("y", 6)
+      .attr("dy", ".71em")
+      .style("text-anchor", "end")
+      .text("MEDV")
+
+  svg7.selectAll(".dot")
+      .data(data)
+    .enter().append("circle")
+      .attr("class", "dot")
+      .attr("r", 1.5)
+      .attr("cx", function(d) { return x(d.NOX); })
+      .attr("cy", function(d) { return y(d.MEDV); })
+
+  svg7.append("text")
+        .attr("x", (width / 3))             
+        .attr("y", 0 - (margin.top / 4))
+        .attr("text-anchor", "right")  
+        .style("font-size", "10px") 
+        .style("text-decoration", "underline")  
+        .text("Nitric Oxide concentration vs Price ($1000)");
+
+});
+
+
+var margin = {top: 20, right: 20, bottom: 30, left: 40},
+    width = 400 - margin.left - margin.right,
+    height = 200 - margin.top - margin.bottom;
+
+var x = d3.scale.linear()
+    .range([0, width]);
+
+var y = d3.scale.linear()
+    .range([height, 0]);
+
+var color = d3.scale.category10();
+
+var xAxis = d3.svg.axis()
+    .scale(x)
+    .orient("bottom");
+
+var yAxis = d3.svg.axis()
+    .scale(y)
+    .orient("left");
+
+var svg8 = d3.select("#area8").append("svg")
+    .attr("width", width + margin.left + margin.right)
+    .attr("height", height + margin.top + margin.bottom)
+  .append("g")
+    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+d3.csv("house2.csv", function(error, data) {
+  data.forEach(function(d) {
+    d.MEDV = +d.MEDV;
+    d.AGE = +d.AGE;
+  });
+
+  x.domain(d3.extent(data, function(d) { return d.AGE; })).nice();
+  y.domain(d3.extent(data, function(d) { return d.MEDV; })).nice();
+
+  svg8.append("g")
+      .attr("class", "x axis")
+      .attr("transform", "translate(0," + height + ")")
+      .call(xAxis)
+    .append("text")
+      .attr("class", "label")
+      .attr("x", width)
+      .attr("y", -6)
+      .style("text-anchor", "end")
+      .text("AGE");
+
+  svg8.append("g")
+      .attr("class", "y axis")
+      .call(yAxis)
+    .append("text")
+      .attr("class", "label")
+      .attr("transform", "rotate(-90)")
+      .attr("y", 6)
+      .attr("dy", ".71em")
+      .style("text-anchor", "end")
+      .text("MEDV")
+
+  svg8.selectAll(".dot")
+      .data(data)
+    .enter().append("circle")
+      .attr("class", "dot")
+      .attr("r", 1.5)
+      .attr("cx", function(d) { return x(d.AGE); })
+      .attr("cy", function(d) { return y(d.MEDV); })
+
+  svg8.append("text")
+        .attr("x", (width / 3))             
+        .attr("y", 0 - (margin.top / 4))
+        .attr("text-anchor", "right")  
+        .style("font-size", "10px") 
+        .style("text-decoration", "underline")  
+        .text("Age of lot vs Price ($1000)");
+
+});
+
+
+
+var margin = {top: 20, right: 20, bottom: 30, left: 40},
+    width = 400 - margin.left - margin.right,
+    height = 200 - margin.top - margin.bottom;
+
+var x = d3.scale.linear()
+    .range([0, width]);
+
+var y = d3.scale.linear()
+    .range([height, 0]);
+
+var color = d3.scale.category10();
+
+var xAxis = d3.svg.axis()
+    .scale(x)
+    .orient("bottom");
+
+var yAxis = d3.svg.axis()
+    .scale(y)
+    .orient("left");
+
+var svg9 = d3.select("#area8").append("svg")
+    .attr("width", width + margin.left + margin.right)
+    .attr("height", height + margin.top + margin.bottom)
+  .append("g")
+    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+d3.csv("house2.csv", function(error, data) {
+  data.forEach(function(d) {
+    d.MEDV = +d.MEDV;
+    d.DIS = +d.DIS;
+  });
+
+  x.domain(d3.extent(data, function(d) { return d.DIS; })).nice();
+  y.domain(d3.extent(data, function(d) { return d.MEDV; })).nice();
+
+  svg9.append("g")
+      .attr("class", "x axis")
+      .attr("transform", "translate(0," + height + ")")
+      .call(xAxis)
+    .append("text")
+      .attr("class", "label")
+      .attr("x", width)
+      .attr("y", -6)
+      .style("text-anchor", "end")
+      .text("DIS");
+
+  svg9.append("g")
+      .attr("class", "y axis")
+      .call(yAxis)
+    .append("text")
+      .attr("class", "label")
+      .attr("transform", "rotate(-90)")
+      .attr("y", 6)
+      .attr("dy", ".71em")
+      .style("text-anchor", "end")
+      .text("MEDV")
+
+  svg9.selectAll(".dot")
+      .data(data)
+    .enter().append("circle")
+      .attr("class", "dot")
+      .attr("r", 1.5)
+      .attr("cx", function(d) { return x(d.DIS); })
+      .attr("cy", function(d) { return y(d.MEDV); })
+
+  svg9.append("text")
+        .attr("x", (width / 3))             
+        .attr("y", 0 - (margin.top / 4))
+        .attr("text-anchor", "right")  
+        .style("font-size", "10px") 
+        .style("text-decoration", "underline")  
+        .text("Distance of Boston Centers vs Price ($1000)");
+
+});
+
+
+
+var margin = {top: 20, right: 20, bottom: 30, left: 40},
+    width = 400 - margin.left - margin.right,
+    height = 200 - margin.top - margin.bottom;
+
+var x = d3.scale.linear()
+    .range([0, width]);
+
+var y = d3.scale.linear()
+    .range([height, 0]);
+
+var color = d3.scale.category10();
+
+var xAxis = d3.svg.axis()
+    .scale(x)
+    .orient("bottom");
+
+var yAxis = d3.svg.axis()
+    .scale(y)
+    .orient("left");
+
+var svg10 = d3.select("#area10").append("svg")
+    .attr("width", width + margin.left + margin.right)
+    .attr("height", height + margin.top + margin.bottom)
+  .append("g")
+    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+d3.csv("house2.csv", function(error, data) {
+  data.forEach(function(d) {
+    d.MEDV = +d.MEDV;
+    d.RAD = +d.RAD;
+  });
+
+  x.domain(d3.extent(data, function(d) { return d.RAD; })).nice();
+  y.domain(d3.extent(data, function(d) { return d.MEDV; })).nice();
+
+  svg10.append("g")
+      .attr("class", "x axis")
+      .attr("transform", "translate(0," + height + ")")
+      .call(xAxis)
+    .append("text")
+      .attr("class", "label")
+      .attr("x", width)
+      .attr("y", -6)
+      .style("text-anchor", "end")
+      .text("RAD");
+
+  svg10.append("g")
+      .attr("class", "y axis")
+      .call(yAxis)
+    .append("text")
+      .attr("class", "label")
+      .attr("transform", "rotate(-90)")
+      .attr("y", 6)
+      .attr("dy", ".71em")
+      .style("text-anchor", "end")
+      .text("MEDV")
+
+  svg10.selectAll(".dot")
+      .data(data)
+    .enter().append("circle")
+      .attr("class", "dot")
+      .attr("r", 1.5)
+      .attr("cx", function(d) { return x(d.RAD); })
+      .attr("cy", function(d) { return y(d.MEDV); })
+
+  svg10.append("text")
+        .attr("x", (width / 3))             
+        .attr("y", 0 - (margin.top / 4))
+        .attr("text-anchor", "right")  
+        .style("font-size", "10px") 
+        .style("text-decoration", "underline")  
+        .text("Accessibility to radial highways vs Price ($1000)");
+
+});
+
+
+var margin = {top: 20, right: 20, bottom: 30, left: 40},
+    width = 400 - margin.left - margin.right,
+    height = 200 - margin.top - margin.bottom;
+
+var x = d3.scale.linear()
+    .range([0, width]);
+
+var y = d3.scale.linear()
+    .range([height, 0]);
+
+var color = d3.scale.category10();
+
+var xAxis = d3.svg.axis()
+    .scale(x)
+    .orient("bottom");
+
+var yAxis = d3.svg.axis()
+    .scale(y)
+    .orient("left");
+
+var svg11 = d3.select("#area11").append("svg")
+    .attr("width", width + margin.left + margin.right)
+    .attr("height", height + margin.top + margin.bottom)
+  .append("g")
+    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+d3.csv("house2.csv", function(error, data) {
+  data.forEach(function(d) {
+    d.MEDV = +d.MEDV;
+    d.TAX = +d.TAX;
+  });
+
+  x.domain(d3.extent(data, function(d) { return d.TAX; })).nice();
+  y.domain(d3.extent(data, function(d) { return d.MEDV; })).nice();
+
+  svg11.append("g")
+      .attr("class", "x axis")
+      .attr("transform", "translate(0," + height + ")")
+      .call(xAxis)
+    .append("text")
+      .attr("class", "label")
+      .attr("x", width)
+      .attr("y", -6)
+      .style("text-anchor", "end")
+      .text("TAX");
+
+  svg11.append("g")
+      .attr("class", "y axis")
+      .call(yAxis)
+    .append("text")
+      .attr("class", "label")
+      .attr("transform", "rotate(-90)")
+      .attr("y", 6)
+      .attr("dy", ".71em")
+      .style("text-anchor", "end")
+      .text("MEDV")
+
+  svg11.selectAll(".dot")
+      .data(data)
+    .enter().append("circle")
+      .attr("class", "dot")
+      .attr("r", 1.5)
+      .attr("cx", function(d) { return x(d.TAX); })
+      .attr("cy", function(d) { return y(d.MEDV); })
+
+  svg11.append("text")
+        .attr("x", (width / 3))             
+        .attr("y", 0 - (margin.top / 4))
+        .attr("text-anchor", "right")  
+        .style("font-size", "10px") 
+        .style("text-decoration", "underline")  
+        .text("Property tax rate vs Price ($1000)");
+
+});
+
+
+var margin = {top: 20, right: 20, bottom: 30, left: 40},
+    width = 400 - margin.left - margin.right,
+    height = 200 - margin.top - margin.bottom;
+
+var x = d3.scale.linear()
+    .range([0, width]);
+
+var y = d3.scale.linear()
+    .range([height, 0]);
+
+var color = d3.scale.category10();
+
+var xAxis = d3.svg.axis()
+    .scale(x)
+    .orient("bottom");
+
+var yAxis = d3.svg.axis()
+    .scale(y)
+    .orient("left");
+
+var svg12 = d3.select("#area11").append("svg")
+    .attr("width", width + margin.left + margin.right)
+    .attr("height", height + margin.top + margin.bottom)
+  .append("g")
+    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+d3.csv("house2.csv", function(error, data) {
+  data.forEach(function(d) {
+    d.MEDV = +d.MEDV;
+    d.PTRATIO = +d.PTRATIO;
+  });
+
+  x.domain(d3.extent(data, function(d) { return d.PTRATIO; })).nice();
+  y.domain(d3.extent(data, function(d) { return d.MEDV; })).nice();
+
+  svg12.append("g")
+      .attr("class", "x axis")
+      .attr("transform", "translate(0," + height + ")")
+      .call(xAxis)
+    .append("text")
+      .attr("class", "label")
+      .attr("x", width)
+      .attr("y", -6)
+      .style("text-anchor", "end")
+      .text("PTRATIO");
+
+  svg12.append("g")
+      .attr("class", "y axis")
+      .call(yAxis)
+    .append("text")
+      .attr("class", "label")
+      .attr("transform", "rotate(-90)")
+      .attr("y", 6)
+      .attr("dy", ".71em")
+      .style("text-anchor", "end")
+      .text("MEDV")
+
+  svg12.selectAll(".dot")
+      .data(data)
+    .enter().append("circle")
+      .attr("class", "dot")
+      .attr("r", 1.5)
+      .attr("cx", function(d) { return x(d.PTRATIO); })
+      .attr("cy", function(d) { return y(d.MEDV); })
+
+  svg12.append("text")
+        .attr("x", (width / 3))             
+        .attr("y", 0 - (margin.top / 4))
+        .attr("text-anchor", "right")  
+        .style("font-size", "10px") 
+        .style("text-decoration", "underline")  
+        .text("Pupil-Teacher Ratio vs Price ($1000)");
+
+});
+
+var margin = {top: 20, right: 20, bottom: 30, left: 40},
+    width = 400 - margin.left - margin.right,
+    height = 200 - margin.top - margin.bottom;
+
+var x = d3.scale.linear()
+    .range([0, width]);
+
+var y = d3.scale.linear()
+    .range([height, 0]);
+
+var color = d3.scale.category10();
+
+var xAxis = d3.svg.axis()
+    .scale(x)
+    .orient("bottom");
+
+var yAxis = d3.svg.axis()
+    .scale(y)
+    .orient("left");
+
+var svg13 = d3.select("#area13").append("svg")
+    .attr("width", width + margin.left + margin.right)
+    .attr("height", height + margin.top + margin.bottom)
+  .append("g")
+    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+d3.csv("house2.csv", function(error, data) {
+  data.forEach(function(d) {
+    d.MEDV = +d.MEDV;
+    d.LSTAT = +d.LSTAT;
+  });
+
+  x.domain(d3.extent(data, function(d) { return d.LSTAT; })).nice();
+  y.domain(d3.extent(data, function(d) { return d.MEDV; })).nice();
+
+  svg13.append("g")
+      .attr("class", "x axis")
+      .attr("transform", "translate(0," + height + ")")
+      .call(xAxis)
+    .append("text")
+      .attr("class", "label")
+      .attr("x", width)
+      .attr("y", -6)
+      .style("text-anchor", "end")
+      .text("LSTAT");
+
+  svg13.append("g")
+      .attr("class", "y axis")
+      .call(yAxis)
+    .append("text")
+      .attr("class", "label")
+      .attr("transform", "rotate(-90)")
+      .attr("y", 6)
+      .attr("dy", ".71em")
+      .style("text-anchor", "end")
+      .text("MEDV")
+
+  svg13.selectAll(".dot")
+      .data(data)
+    .enter().append("circle")
+      .attr("class", "dot")
+      .attr("r", 1.5)
+      .attr("cx", function(d) { return x(d.AGE); })
+      .attr("cy", function(d) { return y(d.MEDV); })
+
+  svg13.append("text")
+        .attr("x", (width / 3))             
+        .attr("y", 0 - (margin.top / 4))
+        .attr("text-anchor", "left")  
+        .style("font-size", "10px") 
+        .style("text-decoration", "underline")  
+        .text("Lower Status of Population vs Price ($1000)");
+
+});
 
 </script>
+
 </body>
 </html>

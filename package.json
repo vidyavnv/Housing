@@ -1,24 +1,37 @@
 {
-  "name": "application-name",
-  "version": "0.0.1",
-  "private": true,
+  "name": "Housing",
+  "version": "0.0.0",
+  "description": "Housing data visualization",
   "main": "app.js",
+  "dependencies": {
+    "d3": "~3.4.4",
+    "ejs": "~1.0.0",
+    "express": "^3.5.1",
+    "jade": "~1.3.0",
+    "jsdom": "~0.10.3",
+    "mongodb": "~1.3.23",
+    "monk": "~0.8.1",
+    "logfmt": "^1.1.2"
+  },
+  "devDependencies": {},
   "scripts": {
-    "start": "node app.js"
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/jane-doe/node-example.git"
+    "url": "https://github.com/vidyavnv/Housing.git"
+  },
+  "keywords": [
+    "nodejs",
+    "d3.js"
+  ],
+  "author": "vidyavnv",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/vidyavnv/Housing/issues"
   },
   "engines": {
     "node": "0.10.x"
   },
-  "dependencies": {
-    "express": "3.5.1",
-    "jade": "*",
-    "mongodb":"*",
-    "d3":"*",
-    "ejs":"*",
-    "monk":"*"
-  }
+  "homepage": "https://github.com/vidyavnv/Housing"
 }

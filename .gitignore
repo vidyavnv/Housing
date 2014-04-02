@@ -1,4 +1,4 @@
-gnore node modules
+#Ignore node modules
 node_modules/*
 
 #public folder

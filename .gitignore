@@ -1,0 +1,28 @@
+gnore node modules
+node_modules/*
+
+#public folder
+public/images/*
+public/javascripts/*
+public/stylesheets/*
+public/data/*
+public/housingData.txt
+public/changeSpace.py
+
+stylesheets/*
+
+stylesheets/*
+
+#routes folder
+routes/user.js
+
+#views folder
+views/index.jade
+views/layout.jade
+views/helloworld.jade
+
+.DS_Store
+
+Procfile
+
+git-credential-osxkeychain

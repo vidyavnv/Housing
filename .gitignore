@@ -23,6 +23,4 @@ views/helloworld.jade
 
 .DS_Store
 
-Procfile
-
 git-credential-osxkeychain

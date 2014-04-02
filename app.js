@@ -38,7 +38,7 @@ if ('development' == app.get('env')) {
 // app.get('/', routes.index);
 // app.get('/users', user.list);
 // app.get('/helloworld', routes.helloworld);
-app.get('/housing', routes.d3);
+app.get('/', routes.d3);
 
 
 
